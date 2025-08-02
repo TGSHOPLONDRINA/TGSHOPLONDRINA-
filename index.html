@@ -60,6 +60,25 @@
       border-radius: 5px;
       border: 1px solid #ccc;
   }
+
+  /* ✅ ESTILO DO TOAST */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    background: #25D366;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 9999;
+  }
+  .toast.show {
+    opacity: 1;
+  }
 </style>
 </head>
 
@@ -67,7 +86,7 @@
 <header>
   <div class="logo">TG <span>SHOP</span> LONDRINA</div>
   <div class="search-bar">
-    <input type="text" placeholder="Buscar produtos...">
+    <input type="text" id="campoBusca" placeholder="Buscar produtos..." oninput="buscarProduto()">
   </div>
   <div class="icons">
     <i class="fas fa-shopping-cart" onclick="abrirCarrinho()"></i>
@@ -81,7 +100,7 @@
   <button onclick="filtrarProdutos('acessorios')">Acessórios</button>
   <button onclick="filtrarProdutos('games')">Games</button>
   <button onclick="filtrarProdutos('casa')">Casa</button>
-    <button onclick="filtrarProdutos('higiene')">Higiene</button>
+  <button onclick="filtrarProdutos('higiene')">Higiene</button>
 </nav>
 
 <div class="banner">promoção relâmpago até às 23:59</div>
@@ -118,9 +137,9 @@
   
   <div class="produto" data-categoria="higiene">
     <img src="https://i.imgur.com/aWquij1.jpeg150" alt="Produto 5">
-    <h3>pano de chão</h3>
+    <h3>Pano de Chão</h3>
     <p>R$ 10,00</p>
-    <button onclick="addCarrinho('pano de chão', 10)">Adicionar ao Carrinho</button>
+    <button onclick="addCarrinho('Pano de Chão', 10)">Adicionar ao Carrinho</button>
   </div>
 </section>
 
@@ -149,14 +168,17 @@
   </div>
 </div>
 
+<!-- ✅ TOAST -->
+<div id="toast" class="toast"></div>
+
 <script>
 let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
 
-// ✅ Adicionar produto no carrinho
+// ✅ Adicionar produto no carrinho (com toast)
 function addCarrinho(produto, preco) {
     carrinho.push({produto, preco});
     localStorage.setItem('carrinho', JSON.stringify(carrinho));
-    alert('✅ Produto adicionado ao carrinho!');
+    mostrarToast('✅ Produto adicionado ao carrinho!');
 }
 
 // ✅ Abrir carrinho
@@ -198,7 +220,7 @@ function removerItem(index) {
 // ✅ Abrir formulário para nome e endereço
 function abrirFormulario() {
     if (carrinho.length === 0) {
-        alert('⚠️ Seu carrinho está vazio!');
+        mostrarToast('⚠️ Seu carrinho está vazio!');
         return;
     }
     fecharCarrinho();
@@ -216,7 +238,7 @@ function finalizarPedido() {
     let endereco = document.getElementById('enderecoCliente').value;
 
     if (!nome || !endereco) {
-        alert('⚠️ Por favor, preencha seu nome e endereço.');
+        mostrarToast('⚠️ Preencha seu nome e endereço!');
         return;
     }
 
@@ -250,6 +272,32 @@ function filtrarProdutos(categoria) {
             produto.style.display = 'none';
         }
     });
+}
+
+// ✅ 🔍 Função de busca
+function buscarProduto() {
+    let termo = document.getElementById('campoBusca').value.toLowerCase();
+    let produtos = document.querySelectorAll('.produto');
+
+    produtos.forEach(produto => {
+        let nomeProduto = produto.querySelector('h3').textContent.toLowerCase();
+        if (nomeProduto.includes(termo)) {
+            produto.style.display = 'block';
+        } else {
+            produto.style.display = 'none';
+        }
+    });
+}
+
+// ✅ Função Toast
+function mostrarToast(mensagem) {
+    let toast = document.getElementById('toast');
+    toast.textContent = mensagem;
+    toast.classList.add('show');
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
 }
 </script>
 
