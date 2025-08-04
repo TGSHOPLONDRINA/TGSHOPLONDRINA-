@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>TG SHOP LONDRINA</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 <style>
   body {margin: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;}
   header {background-color: #111; padding: 10px 20px; color: white; display: flex; align-items: center; justify-content: space-between;}
@@ -108,35 +108,35 @@
 <!-- 🔥 LISTA DE PRODUTOS -->
 <section class="produtos">
   <div class="produto" data-categoria="roupas">
-    <img src="https://i.imgur.com/rJS9YgO.jpeg/150" alt="Produto 1">
+    <img src="https://i.imgur.com/rJS9YgO.jpeg/150" alt="Produto 1" />
     <h3>Moletom Vermelho</h3>
     <p>R$ 120,00</p>
     <button onclick="addCarrinho('Moletom Vermelho', 120)">Adicionar ao Carrinho</button>
   </div>
 
   <div class="produto" data-categoria="acessorios">
-    <img src="https://i.imgur.com/J48hTZb.jpeg/150" alt="Produto 2">
+    <img src="https://i.imgur.com/J48hTZb.jpeg/150" alt="Produto 2" />
     <h3>Relógio Digital</h3>
     <p>R$ 80,00</p>
     <button onclick="addCarrinho('Relógio Digital', 80)">Adicionar ao Carrinho</button>
   </div>
 
   <div class="produto" data-categoria="games">
-    <img src="https://i.imgur.com/rWSjhvj.jpeg/150" alt="Produto 3">
+    <img src="https://i.imgur.com/rWSjhvj.jpeg/150" alt="Produto 3" />
     <h3>Controle PS5</h3>
     <p>R$ 350,00</p>
     <button onclick="addCarrinho('Controle PS5', 350)">Adicionar ao Carrinho</button>
   </div>
 
   <div class="produto" data-categoria="casa">
-    <img src="https://i.imgur.com/CzYCAWQ.jpeg/150" alt="Produto 4">
+    <img src="https://i.imgur.com/CzYCAWQ.jpeg/150" alt="Produto 4" />
     <h3>Jogo de Panelas</h3>
     <p>R$ 200,00</p>
     <button onclick="addCarrinho('Jogo de Panelas', 200)">Adicionar ao Carrinho</button>
   </div>
   
   <div class="produto" data-categoria="higiene">
-    <img src="https://i.imgur.com/aWquij1.jpeg150" alt="Produto 5">
+    <img src="https://i.imgur.com/aWquij1.jpeg150" alt="Produto 5" />
     <h3>Pano de Chão</h3>
     <p>R$ 10,00</p>
     <button onclick="addCarrinho('Pano de Chão', 10)">Adicionar ao Carrinho</button>
@@ -161,8 +161,8 @@
 <div id="dadosClienteModal">
   <div class="conteudo">
     <h2>📋 Seus Dados</h2>
-    <input type="text" id="nomeCliente" class="input-campo" placeholder="Seu nome completo">
-    <input type="text" id="enderecoCliente" class="input-campo" placeholder="Seu endereço completo">
+    <input type="text" id="nomeCliente" class="input-campo" placeholder="Seu nome completo" />
+    <input type="text" id="enderecoCliente" class="input-campo" placeholder="Seu endereço completo" />
     <button class="btn-finalizar" onclick="finalizarPedido()">📲 Enviar Pedido no WhatsApp</button>
     <button style="margin-top:10px; width:100%;" onclick="fecharFormulario()">❌ Cancelar</button>
   </div>
@@ -232,36 +232,54 @@ function fecharFormulario() {
     document.getElementById('dadosClienteModal').style.display = 'none';
 }
 
-// ✅ Finalizar pedido (envia para WhatsApp)
+// === INTEGRAÇÃO COM CALLMEBOT API ===
+const APIKEY = '2198964';  // Sua apikey do CallMeBot
+const PHONE = '556296094975'; // Seu número no formato internacional (com DDD, sem "+")
+
+// Função para enviar a mensagem pelo CallMeBot via fetch
+function enviarMensagemCallMeBot(mensagem) {
+  const msgEncoded = encodeURIComponent(mensagem);
+  const url = `https://api.callmebot.com/whatsapp.php?phone=${PHONE}&text=${msgEncoded}&apikey=${APIKEY}`;
+
+  fetch(url)
+    .then(response => {
+      if (response.ok) {
+        mostrarToast('✅ Pedido enviado com sucesso pelo CallMeBot!');
+        localStorage.removeItem('carrinho');
+        carrinho = [];
+        fecharFormulario();
+      } else {
+        mostrarToast('⚠️ Falha ao enviar o pedido. Tente novamente.');
+      }
+    })
+    .catch(() => {
+      mostrarToast('⚠️ Erro na comunicação com o CallMeBot.');
+    });
+}
+
+// ✅ Finalizar pedido (usa CallMeBot)
 function finalizarPedido() {
-    let nome = document.getElementById('nomeCliente').value;
-    let endereco = document.getElementById('enderecoCliente').value;
+    let nome = document.getElementById('nomeCliente').value.trim();
+    let endereco = document.getElementById('enderecoCliente').value.trim();
 
     if (!nome || !endereco) {
         mostrarToast('⚠️ Preencha seu nome e endereço!');
         return;
     }
 
-    let mensagem = `*Novo Pedido via Site*%0A%0A`;
-    mensagem += `👤 *Cliente:* ${nome}%0A`;
-    mensagem += `📍 *Endereço:* ${endereco}%0A%0A`;
-    mensagem += `🛒 *Itens do pedido:*%0A`;
+    let mensagem = `*Novo Pedido via Site*\n\n`;
+    mensagem += `👤 *Cliente:* ${nome}\n`;
+    mensagem += `📍 *Endereço:* ${endereco}\n\n`;
+    mensagem += `🛒 *Itens do pedido:*\n`;
 
     carrinho.forEach(item => {
-        mensagem += `• ${item.produto} - R$ ${item.preco},00%0A`;
+        mensagem += `• ${item.produto} - R$ ${item.preco},00\n`;
     });
 
     let total = carrinho.reduce((acc, item) => acc + item.preco, 0);
-    mensagem += `%0A💰 *Total: R$ ${total},00*`;
+    mensagem += `\n💰 *Total: R$ ${total},00*`;
 
-    window.open(`https://wa.me/554399632114?text=${mensagem}`, "_blank");
-
-window.open(`https://wa.me/5511988553006?text=${mensagem}`, "_blank");
-
-
-    localStorage.removeItem('carrinho');
-    carrinho = [];
-    fecharFormulario();
+    enviarMensagemCallMeBot(mensagem);
 }
 
 // ✅ Filtro de categorias
