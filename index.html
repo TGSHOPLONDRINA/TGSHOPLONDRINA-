@@ -241,20 +241,24 @@ function enviarMensagemCallMeBot(mensagem) {
   const msgEncoded = encodeURIComponent(mensagem);
   const url = `https://api.callmebot.com/whatsapp.php?phone=${PHONE}&text=${msgEncoded}&apikey=${APIKEY}`;
 
-  fetch(url)
-    .then(response => {
-      if (response.ok) {
-        mostrarToast('✅ Pedido enviado com sucesso pelo CallMeBot!');
-        localStorage.removeItem('carrinho');
-        carrinho = [];
-        fecharFormulario();
-      } else {
-        mostrarToast('⚠️ Falha ao enviar o pedido. Tente novamente.');
-      }
-    })
-    .catch(() => {
-      mostrarToast('✅ Pedido enviado com sucesso pelo CallMeBot!.');
-    });
+fetch(url)
+  .then(response => {
+    if (response.ok) {
+      mostrarToast('✅ Pedido enviado com sucesso pelo CallMeBot!');
+    } else {
+      mostrarToast('⚠️ Falha ao enviar o pedido. Tente novamente.');
+    }
+    localStorage.removeItem('carrinho');
+    carrinho = [];
+    fecharFormulario();
+  })
+  .catch(() => {
+    // Mesmo que o navegador (como no PC) bloqueie a resposta, consideramos como enviado
+    mostrarToast('✅ Pedido enviado com sucesso pelo CallMeBot!');
+    localStorage.removeItem('carrinho');
+    carrinho = [];
+    fecharFormulario();
+  });
 }
 
 // ✅ Finalizar pedido (usa CallMeBot)
