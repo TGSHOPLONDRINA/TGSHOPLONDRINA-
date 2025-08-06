@@ -138,6 +138,10 @@
       font-size: 24px;
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
       z-index: 1000;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     /* ✅ POPUP de variações */
@@ -170,6 +174,9 @@
       padding: 8px;
       margin-bottom: 10px;
       border-radius: 5px;
+      background: #222;
+      border: none;
+      color: white;
     }
 
     .popup-conteudo button {
@@ -182,6 +189,7 @@
       color: white;
       border: none;
       cursor: pointer;
+      transition: background 0.3s;
     }
 
     .popup-conteudo button:hover {
@@ -208,6 +216,8 @@
       max-height: 80vh;
       overflow-y: auto;
       color: white;
+      display: flex;
+      flex-direction: column;
     }
 
     .conteudo h2 {
@@ -219,15 +229,19 @@
       border-bottom: 1px solid #444;
       padding: 10px 0;
       font-size: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .item-carrinho button {
-      float: right;
       background: none;
       border: none;
       color: red;
-      font-size: 16px;
+      font-size: 20px;
       cursor: pointer;
+      padding: 0 8px;
+      font-weight: bold;
     }
 
     .btn-finalizar {
@@ -240,6 +254,10 @@
       margin-top: 10px;
       font-weight: bold;
       cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn-finalizar:hover {
+      background: #006600;
     }
 
     /* ✅ TOAST */
@@ -280,7 +298,7 @@
     <input type="text" id="campoBusca" placeholder="Buscar produtos..." oninput="buscarProduto()">
   </div>
   <div class="icons">
-    <i class="fas fa-shopping-cart" onclick="abrirCarrinho()"></i>
+    <i class="fas fa-shopping-cart" onclick="abrirCarrinho()" title="Abrir carrinho"></i>
   </div>
 </header>
 
@@ -288,15 +306,30 @@
   <button onclick="filtrarProdutos('todos')">Todos</button>
   <button onclick="filtrarProdutos('roupas')">Roupas</button>
   <button onclick="filtrarProdutos('acessorios')">Acessórios</button>
+  <button onclick="filtrarProdutos('cozinha')">cozinha</button>
 </nav>
 
 <div class="banner">🔥 PROMOÇÃO RELÂMPAGO ATÉ ÀS 23:59 🔥</div>
 
 <section class="produtos" id="listaProdutos">
-  <div class="produto" data-produto="Moletom Vermelho" data-preco="120" data-categoria="roupas">
-    <img src="https://i.imgur.com/rJS9YgO.jpeg" alt="Moletom">
-    <h3>Moletom Vermelho</h3>
-    <p>R$ 120,00</p>
+  <div class="produto" data-produto="Camiseta Branca" data-preco="80" data-categoria="roupas" data-variacao="completo">
+    <img src="https://i.imgur.com/W1UJ8vD.jpeg" alt="Camiseta">
+    <h3>Camiseta Branca</h3>
+    <p>R$ 80,00</p>
+    <button onclick="abrirPopup(this)">Adicionar ao Carrinho</button>
+  </div>
+
+  <div class="produto" data-produto="panela" data-preco="50" data-categoria="cozinha" data-variacao="cor">
+    <img src="https://i.imgur.com/7QZ9w0K.jpeg" alt="Boné Preto">
+    <h3>panela</h3>
+    <p>R$ 50,00</p>
+    <button onclick="abrirPopup(this)">Adicionar ao Carrinho</button>
+  </div>
+
+  <div class="produto" data-produto="Jaqueta Jeans" data-preco="150" data-categoria="roupas" data-variacao="tamanho">
+    <img src="https://i.imgur.com/0pEka0U.jpeg" alt="Jaqueta Jeans">
+    <h3>Jaqueta Jeans</h3>
+    <p>R$ 150,00</p>
     <button onclick="abrirPopup(this)">Adicionar ao Carrinho</button>
   </div>
 </section>
@@ -305,7 +338,7 @@
   <p>© 2025 TG SHOP LONDRINA - Todos os direitos reservados</p>
 </footer>
 
-<a class="whatsapp-btn" href="https://wa.me/554399632114" target="_blank">
+<a class="whatsapp-btn" href="https://wa.me/554399632114" target="_blank" title="Fale conosco no WhatsApp">
   <i class="fab fa-whatsapp"></i>
 </a>
 
@@ -313,19 +346,23 @@
 <div id="popupVariacoes">
   <div class="popup-conteudo">
     <h3>Escolha as opções</h3>
-    <select id="cor">
-      <option value="Vermelho">Vermelho</option>
-      <option value="Preto">Preto</option>
-      <option value="Branco">Branco</option>
-    </select>
-    <select id="tamanho">
-      <option value="P">P</option>
-      <option value="M">M</option>
-      <option value="G">G</option>
-      <option value="GG">GG</option>
-    </select>
+    <div id="divCor">
+      <select id="cor">
+        <option value="Vermelho">Vermelho</option>
+        <option value="Preto">Preto</option>
+        <option value="Branco">Branco</option>
+      </select>
+    </div>
+    <div id="divTamanho">
+      <select id="tamanho">
+        <option value="P">P</option>
+        <option value="M">M</option>
+        <option value="G">G</option>
+        <option value="GG">GG</option>
+      </select>
+    </div>
     <button onclick="confirmarAdicao()">Adicionar</button>
-    <button onclick="fecharPopup()" style="margin-top:8px;">Cancelar</button>
+    <button onclick="fecharPopup()" style="margin-top:8px; background:#444;">Cancelar</button>
   </div>
 </div>
 
@@ -333,8 +370,26 @@
   <div class="conteudo">
     <h2>🛒 Seu Carrinho</h2>
     <div id="listaCarrinho"></div>
+    
+    <div style="margin-top: 20px;">
+  <label for="nomeCliente">Nome e Sobrenome:</label><br>
+  <input type="text" id="nomeCliente" placeholder="Ex: João da Silva" style="width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 5px; border: none;"><br>
+
+  <label for="telefoneCliente">Número para contato:</label><br>
+  <input type="tel" id="telefoneCliente" placeholder="Ex: (43) 99999-0000" style="width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 5px; border: none;"><br>
+
+  <label for="enderecoCliente">Endereço (Rua, Avenida...):</label><br>
+  <input type="text" id="enderecoCliente" placeholder="Ex: Rua das Flores" style="width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 5px; border: none;"><br>
+
+  <label for="numeroEndereco">Número da casa ou prédio:</label><br>
+  <input type="text" id="numeroEndereco" placeholder="Ex: 123" style="width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 5px; border: none;"><br>
+
+  <label for="aptoBloco">Apto e bloco (opcional):</label><br>
+  <input type="text" id="aptoBloco" placeholder="Ex: Apto 202, Bloco B" style="width: 100%; padding: 8px; border-radius: 5px; border: none;"><br>
+</div>
+    
     <button class="btn-finalizar" onclick="enviarWhatsApp()">📲 Enviar Pedido</button>
-    <button onclick="fecharCarrinho()" style="margin-top:10px; width:100%;">❌ Fechar</button>
+    <button onclick="fecharCarrinho()" style="margin-top:10px; width:100%; background:#444;">❌ Fechar</button>
   </div>
 </div>
 
@@ -344,32 +399,33 @@
 let carrinho = [];
 let produtoSelecionado = null;
 
-function abrirPopup(btn) {
-  const produtoDiv = btn.closest('.produto');
-  produtoSelecionado = {
-    nome: produtoDiv.dataset.produto,
-    preco: parseFloat(produtoDiv.dataset.preco)
-  };
-  document.getElementById('popupVariacoes').style.display = 'flex';
-}
+const listaProdutos = document.getElementById('listaProdutos');
+const listaCarrinho = document.getElementById('listaCarrinho');
+const toast = document.getElementById('toast');
+const toastMsg = document.getElementById('toastMsg');
 
-function fecharPopup() {
-  document.getElementById('popupVariacoes').style.display = 'none';
-}
-
-function confirmarAdicao() {
-  const cor = document.getElementById('cor').value;
-  const tamanho = document.getElementById('tamanho').value;
-
-  carrinho.push({
-    nome: produtoSelecionado.nome,
-    preco: produtoSelecionado.preco,
-    variacoes: `Cor: ${cor}, Tamanho: ${tamanho}`
+function filtrarProdutos(categoria) {
+  const produtos = listaProdutos.querySelectorAll('.produto');
+  produtos.forEach(prod => {
+    if (categoria === 'todos' || prod.dataset.categoria === categoria) {
+      prod.style.display = 'block';
+    } else {
+      prod.style.display = 'none';
+    }
   });
+}
 
-  mostrarToast("Produto adicionado ao carrinho!");
-  fecharPopup();
-  salvarCarrinho();
+function buscarProduto() {
+  const termo = document.getElementById('campoBusca').value.toLowerCase();
+  const produtos = listaProdutos.querySelectorAll('.produto');
+  produtos.forEach(prod => {
+    const nome = prod.dataset.produto.toLowerCase();
+    if (nome.includes(termo)) {
+      prod.style.display = 'block';
+    } else {
+      prod.style.display = 'none';
+    }
+  });
 }
 
 function abrirCarrinho() {
@@ -382,23 +438,79 @@ function fecharCarrinho() {
 }
 
 function atualizarCarrinho() {
-  let html = '';
-  let total = 0;
-  carrinho.forEach((item, i) => {
-    total += item.preco;
-    html += `<div class="item-carrinho">
-      ${item.nome} (${item.variacoes}) - R$ ${item.preco},00
-      <button onclick="removerItem(${i})"><i class="fas fa-trash-alt"></i></button>
-    </div>`;
+  listaCarrinho.innerHTML = '';
+  if (carrinho.length === 0) {
+    listaCarrinho.innerHTML = '<p>Seu carrinho está vazio.</p>';
+    return;
+  }
+
+  carrinho.forEach((item, index) => {
+    const div = document.createElement('div');
+    div.className = 'item-carrinho';
+    div.innerHTML = `
+      <span>${item.nome} (${item.variacoes}) - R$ ${item.preco.toFixed(2)}</span>
+      <button onclick="removerDoCarrinho(${index})" title="Remover item">&times;</button>
+    `;
+    listaCarrinho.appendChild(div);
   });
-  html += `<p><strong>Total: R$ ${total},00</strong></p>`;
-  document.getElementById('listaCarrinho').innerHTML = html;
 }
 
-function removerItem(i) {
-  carrinho.splice(i, 1);
-  salvarCarrinho();
+function removerDoCarrinho(index) {
+  carrinho.splice(index, 1);
   atualizarCarrinho();
+  mostrarToast('Item removido do carrinho.');
+  salvarCarrinho();
+}
+
+function enviarWhatsApp() {
+  if (carrinho.length === 0) {
+    alert('Seu carrinho está vazio!');
+    return;
+  }
+
+  // 📦 Produtos
+  let mensagem = 'Olá, gostaria de fazer o pedido:\n\n';
+  carrinho.forEach((item, i) => {
+    mensagem += `${i+1}. ${item.nome} (${item.variacoes}) - R$ ${item.preco.toFixed(2)}\n`;
+  });
+
+  const total = carrinho.reduce((acc, item) => acc + item.preco, 0);
+  mensagem += `\n🧾 Total: R$ ${total.toFixed(2)}\n`;
+
+  // 🧍 Dados do Cliente
+  const nome = document.getElementById("nomeCliente").value.trim();
+  const telefone = document.getElementById("telefoneCliente").value.trim();
+  const endereco = document.getElementById("enderecoCliente").value.trim();
+  const numeroEndereco = document.getElementById("numeroEndereco").value.trim();
+  const aptoBloco = document.getElementById("aptoBloco").value.trim();
+
+  // ✅ Validação dos campos obrigatórios
+  if (!nome || !telefone || !endereco || !numeroEndereco) {
+  alert("⚠️ Ops! Você precisa preencher: Nome, Telefone, Endereço e Número.");
+  return;
+}
+
+  // 🧾 Adicionando os dados à mensagem
+  mensagem += `\n📍 *Dados do Cliente:*`;
+  mensagem += `\n👤 Nome: ${nome}`;
+  mensagem += `\n📞 Telefone: ${telefone}`;
+  mensagem += `\n🏠 Endereço: ${endereco}, Nº ${numeroEndereco}`;
+  if (aptoBloco) {
+    mensagem += `\n🏢 Complemento: ${aptoBloco}`;
+  }
+
+  // 📲 Enviando via WhatsApp
+  const telefoneDestino = '554399632114'; // seu número com DDI + DDD
+  const url = `https://wa.me/${telefoneDestino}?text=${encodeURIComponent(mensagem)}`;
+  window.open(url, '_blank');
+}
+
+function mostrarToast(msg) {
+  toastMsg.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
 }
 
 function salvarCarrinho() {
@@ -406,48 +518,58 @@ function salvarCarrinho() {
 }
 
 function carregarCarrinho() {
-  const salvo = localStorage.getItem('carrinho');
-  if (salvo) carrinho = JSON.parse(salvo);
+  const carrinhoSalvo = localStorage.getItem('carrinho');
+  if (carrinhoSalvo) {
+    carrinho = JSON.parse(carrinhoSalvo);
+  }
 }
-
-function enviarWhatsApp() {
-  if (carrinho.length === 0) return mostrarToast("⚠️ Carrinho vazio!");
-
-  let mensagem = '*Novo Pedido:*%0A%0A';
-  carrinho.forEach(item => {
-    mensagem += `• ${item.nome} (${item.variacoes}) - R$ ${item.preco},00%0A`;
-  });
-  const total = carrinho.reduce((acc, item) => acc + item.preco, 0);
-  mensagem += `%0A💰 *Total: R$ ${total},00*`;
-
-  window.open(`https://wa.me/554399632114?text=${mensagem}`, '_blank');
-  carrinho = [];
-  salvarCarrinho();
-  fecharCarrinho();
-}
-
-function mostrarToast(msg) {
-  const toast = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
-}
-
-function filtrarProdutos(cat) {
-  document.querySelectorAll('.produto').forEach(p => {
-    p.style.display = (cat === 'todos' || p.dataset.categoria === cat) ? 'block' : 'none';
-  });
-}
-
-function buscarProduto() {
-  let termo = document.getElementById('campoBusca').value.toLowerCase();
-  document.querySelectorAll('.produto').forEach(p => {
-    let nome = p.querySelector('h3').textContent.toLowerCase();
-    p.style.display = nome.includes(termo) ? 'block' : 'none';
-  });
-}
-
 carregarCarrinho();
+
+// Popup variações
+function abrirPopup(btn) {
+  const produtoDiv = btn.closest('.produto');
+  const variacao = produtoDiv.dataset.variacao || "completo";
+
+  produtoSelecionado = {
+    nome: produtoDiv.dataset.produto,
+    preco: parseFloat(produtoDiv.dataset.preco),
+    tipoVariacao: variacao
+  };
+
+  // Mostrar/ocultar campos conforme o tipo
+  document.getElementById('divCor').style.display = (variacao === 'cor' || variacao === 'completo') ? 'block' : 'none';
+  document.getElementById('divTamanho').style.display = (variacao === 'tamanho' || variacao === 'completo') ? 'block' : 'none';
+
+  document.getElementById('popupVariacoes').style.display = 'flex';
+}
+
+function fecharPopup() {
+  document.getElementById('popupVariacoes').style.display = 'none';
+}
+
+function confirmarAdicao() {
+  let variacoes = [];
+
+  if (produtoSelecionado.tipoVariacao === 'cor' || produtoSelecionado.tipoVariacao === 'completo') {
+    const cor = document.getElementById('cor').value;
+    variacoes.push(`Cor: ${cor}`);
+  }
+
+  if (produtoSelecionado.tipoVariacao === 'tamanho' || produtoSelecionado.tipoVariacao === 'completo') {
+    const tamanho = document.getElementById('tamanho').value;
+    variacoes.push(`Tamanho: ${tamanho}`);
+  }
+
+  carrinho.push({
+    nome: produtoSelecionado.nome,
+    preco: produtoSelecionado.preco,
+    variacoes: variacoes.join(', ')
+  });
+
+  mostrarToast("Produto adicionado ao carrinho!");
+  fecharPopup();
+  salvarCarrinho();
+}
 </script>
 
 </body>
