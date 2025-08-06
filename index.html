@@ -1,330 +1,179 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>TG SHOP LONDRINA</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-<style>
-  body {margin: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;}
-  header {background-color: #111; padding: 10px 20px; color: white; display: flex; align-items: center; justify-content: space-between;}
-  header .logo {font-size: 24px; font-weight: bold;}
-  header .logo span {background: red; padding: 3px 6px; border-radius: 3px;}
-  .search-bar {flex: 1; margin: 0 20px;}
-  .search-bar input {width: 100%; padding: 8px; border-radius: 5px; border: none;}
-  .icons i {margin-left: 15px; cursor: pointer;}
-  nav {background-color: #222; padding: 10px; text-align: center;}
-  nav button {
-      background: none;
-      border: none;
-      color: white;
-      margin: 0 15px;
-      font-weight: bold;
-      font-size: 16px;
-      cursor: pointer;
-  }
-  nav button:hover {text-decoration: underline; color: red;}
-  .banner {background-color: red; color: white; padding: 30px; text-align: center; font-size: 24px; font-weight: bold;}
-  .produtos {display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; padding: 20px;}
-  .produto {background: white; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 0 0 5px rgba(0,0,0,0.1);}
-  .produto img {max-width: 100%; height: 150px; object-fit: contain;}
-  .produto button {background-color: red; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; margin-top: 10px; cursor: pointer; font-weight: bold;}
-  footer {background: #111; color: white; text-align: center; padding: 20px; margin-top: 20px;}
-  .whatsapp-btn {position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; padding: 15px; border-radius: 50%; font-size: 24px; box-shadow: 0 0 10px rgba(0,0,0,0.3);}
-  
-  /* MODAL DO CARRINHO */
-  #carrinhoModal, #dadosClienteModal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-  }
-  .conteudo {
-      background: white;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Controle de Vencimento – P&B Casa de Rações</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
       padding: 20px;
-      border-radius: 10px;
-      width: 400px;
-      max-height: 80vh;
-      overflow-y: auto;
-  }
-  .conteudo h2 {margin-top: 0;}
-  .item-carrinho {border-bottom: 1px solid #ddd; padding: 10px 0;}
-  .btn-finalizar {background: green; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; margin-top: 10px; cursor: pointer; font-weight: bold;}
-  .input-campo {
-      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo img {
+      width: 60px;
+    }
+    input {
       padding: 10px;
-      margin: 8px 0;
-      border-radius: 5px;
+      margin: 5px;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
       border: 1px solid #ccc;
-  }
-
-  /* ✅ ESTILO DO TOAST */
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    right: 20px;
-    background: #25D366;
-    color: white;
-    padding: 12px 18px;
-    border-radius: 8px;
-    font-weight: bold;
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    z-index: 9999;
-  }
-  .toast.show {
-    opacity: 1;
-  }
-</style>
+      text-align: center;
+    }
+    th {
+      background-color: #eee;
+    }
+    .status-ok {
+      color: green;
+      font-weight: bold;
+    }
+    .status-warning {
+      color: orange;
+      font-weight: bold;
+    }
+    .status-expired {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
 </head>
-
 <body>
-<header>
-  <div class="logo">TG <span>SHOP</span> LONDRINA</div>
-  <div class="search-bar">
-    <input type="text" id="campoBusca" placeholder="Buscar produtos..." oninput="buscarProduto()">
-  </div>
-  <div class="icons">
-    <i class="fas fa-shopping-cart" onclick="abrirCarrinho()"></i>
-  </div>
-</header>
 
-<!-- 🔥 BOTÕES DE CATEGORIA -->
-<nav>
-  <button onclick="filtrarProdutos('todos')">Todos</button>
-  <button onclick="filtrarProdutos('roupas')">Roupas</button>
-  <button onclick="filtrarProdutos('acessorios')">Acessórios</button>
-  <button onclick="filtrarProdutos('games')">Games</button>
-  <button onclick="filtrarProdutos('casa')">Casa</button>
-  <button onclick="filtrarProdutos('higiene')">Higiene</button>
-</nav>
-
-<div class="banner">promoção relâmpago até às 23:59</div>
-
-<!-- 🔥 LISTA DE PRODUTOS -->
-<section class="produtos">
-  <div class="produto" data-categoria="roupas">
-    <img src="https://i.imgur.com/rJS9YgO.jpeg/150" alt="Produto 1" />
-    <h3>Moletom Vermelho</h3>
-    <p>R$ 120,00</p>
-    <button onclick="addCarrinho('Moletom Vermelho', 120)">Adicionar ao Carrinho</button>
+  <div class="logo">
+    <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Logo da loja">
+    <h1>Controle de Vencimento – P&B Casa de Rações</h1>
   </div>
 
-  <div class="produto" data-categoria="acessorios">
-    <img src="https://i.imgur.com/J48hTZb.jpeg/150" alt="Produto 2" />
-    <h3>Relógio Digital</h3>
-    <p>R$ 80,00</p>
-    <button onclick="addCarrinho('Relógio Digital', 80)">Adicionar ao Carrinho</button>
+  <div>
+    <input type="text" id="nome" placeholder="Nome da Ração" />
+    <input type="number" id="quantidade" placeholder="Quantidade" />
+    <input type="date" id="validade" />
+    <button onclick="adicionarRacao()">📤 Adicionar</button>
   </div>
 
-  <div class="produto" data-categoria="games">
-    <img src="https://i.imgur.com/rWSjhvj.jpeg/150" alt="Produto 3" />
-    <h3>Controle PS5</h3>
-    <p>R$ 350,00</p>
-    <button onclick="addCarrinho('Controle PS5', 350)">Adicionar ao Carrinho</button>
-  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Validade</th>
+        <th>Faltam</th>
+        <th>Status</th>
+        <th>📥</th>
+      </tr>
+    </thead>
+    <tbody id="tabela-corpo"></tbody>
+  </table>
 
-  <div class="produto" data-categoria="casa">
-    <img src="https://i.imgur.com/CzYCAWQ.jpeg/150" alt="Produto 4" />
-    <h3>Jogo de Panelas</h3>
-    <p>R$ 200,00</p>
-    <button onclick="addCarrinho('Jogo de Panelas', 200)">Adicionar ao Carrinho</button>
-  </div>
-  
-  <div class="produto" data-categoria="higiene">
-    <img src="https://i.imgur.com/aWquij1.jpeg150" alt="Produto 5" />
-    <h3>Pano de Chão</h3>
-    <p>R$ 10,00</p>
-    <button onclick="addCarrinho('Pano de Chão', 10)">Adicionar ao Carrinho</button>
-  </div>
-</section>
+  <script>
+    const telefone = "556296094975";
+    const apikey = "2198964";
 
-<footer>
-  <p>© 2025 TG SHOP LONDRINA - Todos os direitos reservados</p>
-</footer>
-
-<!-- MODAL DO CARRINHO -->
-<div id="carrinhoModal">
-  <div class="conteudo">
-    <h2>🛒 Seu Carrinho</h2>
-    <div id="listaCarrinho"></div>
-    <button class="btn-finalizar" onclick="abrirFormulario()">✅ Finalizar Pedido</button>
-    <button style="margin-top:10px; width:100%;" onclick="fecharCarrinho()">❌ Fechar</button>
-  </div>
-</div>
-
-<!-- MODAL FORMULÁRIO DADOS DO CLIENTE -->
-<div id="dadosClienteModal">
-  <div class="conteudo">
-    <h2>📋 Seus Dados</h2>
-    <input type="text" id="nomeCliente" class="input-campo" placeholder="Seu nome completo" />
-    <input type="text" id="enderecoCliente" class="input-campo" placeholder="Seu endereço completo" />
-    <button class="btn-finalizar" onclick="finalizarPedido()">📲 Enviar Pedido no WhatsApp</button>
-    <button style="margin-top:10px; width:100%;" onclick="fecharFormulario()">❌ Cancelar</button>
-  </div>
-</div>
-
-<!-- ✅ TOAST -->
-<div id="toast" class="toast"></div>
-
-<script>
-let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-
-// ✅ Adicionar produto no carrinho (com toast)
-function addCarrinho(produto, preco) {
-    carrinho.push({produto, preco});
-    localStorage.setItem('carrinho', JSON.stringify(carrinho));
-    mostrarToast('✅ Produto adicionado ao carrinho!');
-}
-
-// ✅ Abrir carrinho
-function abrirCarrinho() {
-    document.getElementById('carrinhoModal').style.display = 'flex';
-    atualizarCarrinho();
-}
-
-// ✅ Fechar carrinho
-function fecharCarrinho() {
-    document.getElementById('carrinhoModal').style.display = 'none';
-}
-
-// ✅ Atualizar carrinho
-function atualizarCarrinho() {
-    let lista = document.getElementById('listaCarrinho');
-    lista.innerHTML = '';
-    let total = 0;
-
-    carrinho.forEach((item, index) => {
-        total += item.preco;
-        lista.innerHTML += `
-            <div class="item-carrinho">
-                ${item.produto} - R$ ${item.preco},00 
-                <button onclick="removerItem(${index})">🗑</button>
-            </div>`;
-    });
-
-    lista.innerHTML += `<p><strong>Total: R$ ${total},00</strong></p>`;
-}
-
-// ✅ Remover item do carrinho
-function removerItem(index) {
-    carrinho.splice(index, 1);
-    localStorage.setItem('carrinho', JSON.stringify(carrinho));
-    atualizarCarrinho();
-}
-
-// ✅ Abrir formulário para nome e endereço
-function abrirFormulario() {
-    if (carrinho.length === 0) {
-        mostrarToast('⚠️ Seu carrinho está vazio!');
-        return;
-    }
-    fecharCarrinho();
-    document.getElementById('dadosClienteModal').style.display = 'flex';
-}
-
-// ✅ Fechar formulário
-function fecharFormulario() {
-    document.getElementById('dadosClienteModal').style.display = 'none';
-}
-
-// === INTEGRAÇÃO COM CALLMEBOT API ===
-const APIKEY = '2198964';  // Sua apikey do CallMeBot
-const PHONE = '556296094975'; // Seu número no formato internacional (com DDD, sem "+")
-
-// Função para enviar a mensagem pelo CallMeBot via fetch
-function enviarMensagemCallMeBot(mensagem) {
-  const msgEncoded = encodeURIComponent(mensagem);
-  const url = `https://api.callmebot.com/whatsapp.php?phone=${PHONE}&text=${msgEncoded}&apikey=${APIKEY}`;
-
-fetch(url)
-  .then(response => {
-    if (response.ok) {
-      mostrarToast('✅ Pedido enviado com sucesso pelo CallMeBot!');
-    } else {
-      mostrarToast('⚠️ Falha ao enviar o pedido. Tente novamente.');
-    }
-    localStorage.removeItem('carrinho');
-    carrinho = [];
-    fecharFormulario();
-  })
-  .catch(() => {
-    // Mesmo que o navegador (como no PC) bloqueie a resposta, consideramos como enviado
-    mostrarToast('✅ Pedido enviado com sucesso pelo CallMeBot!');
-    localStorage.removeItem('carrinho');
-    carrinho = [];
-    fecharFormulario();
-  });
-}
-
-// ✅ Finalizar pedido (usa CallMeBot)
-function finalizarPedido() {
-    let nome = document.getElementById('nomeCliente').value.trim();
-    let endereco = document.getElementById('enderecoCliente').value.trim();
-
-    if (!nome || !endereco) {
-        mostrarToast('⚠️ Preencha seu nome e endereço!');
-        return;
+    function salvar(dados) {
+      localStorage.setItem("racoes", JSON.stringify(dados));
     }
 
-    let mensagem = `*Novo Pedido via Site*\n\n`;
-    mensagem += `👤 *Cliente:* ${nome}\n`;
-    mensagem += `📍 *Endereço:* ${endereco}\n\n`;
-    mensagem += `🛒 *Itens do pedido:*\n`;
+    function carregar() {
+      return JSON.parse(localStorage.getItem("racoes") || "[]");
+    }
 
-    carrinho.forEach(item => {
-        mensagem += `• ${item.produto} - R$ ${item.preco},00\n`;
-    });
+    function calcularDias(validade) {
+      const hoje = new Date();
+      const dataValidade = new Date(validade);
+      const diff = Math.ceil((dataValidade - hoje) / (1000 * 60 * 60 * 24));
+      return diff;
+    }
 
-    let total = carrinho.reduce((acc, item) => acc + item.preco, 0);
-    mensagem += `\n💰 *Total: R$ ${total},00*`;
+    function enviarWhatsApp(mensagem) {
+      const url = `https://api.callmebot.com/whatsapp.php?phone=${telefone}&text=${encodeURIComponent(mensagem)}&apikey=${apikey}`;
+      fetch(url)
+        .then(res => console.log("Mensagem enviada:", mensagem))
+        .catch(err => console.error("Erro ao enviar:", err));
+    }
 
-    enviarMensagemCallMeBot(mensagem);
-}
+    function atualizarTabela() {
+      const lista = carregar();
+      const corpo = document.getElementById("tabela-corpo");
+      corpo.innerHTML = "";
 
-// ✅ Filtro de categorias
-function filtrarProdutos(categoria) {
-    let produtos = document.querySelectorAll('.produto');
+      lista.forEach((item, i) => {
+        const dias = calcularDias(item.validade);
+        let status = "Ok";
+        let classe = "status-ok";
 
-    produtos.forEach(produto => {
-        if (categoria === 'todos' || produto.dataset.categoria === categoria) {
-            produto.style.display = 'block';
-        } else {
-            produto.style.display = 'none';
+        if (dias < 0) {
+          status = "VENCIDO";
+          classe = "status-expired";
+          enviarWhatsApp(`⚠️ AVISO: O produto "${item.nome}" (Quantidade: ${item.quantidade}) está VENCIDO!`);
+        } else if (dias <= 45) {
+          status = `Vencendo em ${dias} dias`;
+          classe = "status-warning";
+          enviarWhatsApp(`⚠️ Atenção! A ração "${item.nome}" (Quantidade: ${item.quantidade}) está vencendo em ${dias} dias.`);
         }
-    });
-}
 
-// ✅ 🔍 Função de busca
-function buscarProduto() {
-    let termo = document.getElementById('campoBusca').value.toLowerCase();
-    let produtos = document.querySelectorAll('.produto');
+        corpo.innerHTML += `
+          <tr>
+            <td>${item.nome}</td>
+            <td>${item.quantidade}</td>
+            <td>${item.validade}</td>
+            <td>${dias}</td>
+            <td class="${classe}">${status}</td>
+            <td><button onclick="removerRacao(${i})">📥</button></td>
+          </tr>
+        `;
+      });
+    }
 
-    produtos.forEach(produto => {
-        let nomeProduto = produto.querySelector('h3').textContent.toLowerCase();
-        if (nomeProduto.includes(termo)) {
-            produto.style.display = 'block';
-        } else {
-            produto.style.display = 'none';
-        }
-    });
-}
+    function adicionarRacao() {
+      const nome = document.getElementById("nome").value.trim();
+      const quantidade = document.getElementById("quantidade").value;
+      const validade = document.getElementById("validade").value;
 
-// ✅ Função Toast
-function mostrarToast(mensagem) {
-    let toast = document.getElementById('toast');
-    toast.textContent = mensagem;
-    toast.classList.add('show');
+      if (!nome || !quantidade || !validade) {
+        alert("Preencha todos os campos!");
+        return;
+      }
 
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
-}
-</script>
+      const lista = carregar();
+      lista.push({ nome, quantidade, validade });
+      salvar(lista);
+      atualizarTabela();
+
+      document.getElementById("nome").value = "";
+      document.getElementById("quantidade").value = "";
+      document.getElementById("validade").value = "";
+    }
+
+    function removerRacao(index) {
+      const lista = carregar();
+      lista.splice(index, 1);
+      salvar(lista);
+      atualizarTabela();
+    }
+
+    atualizarTabela();
+  </script>
 
 </body>
 </html>
