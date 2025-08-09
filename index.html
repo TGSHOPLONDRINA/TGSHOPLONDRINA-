@@ -312,6 +312,7 @@
 <div class="banner">🔥 PROMOÇÃO RELÂMPAGO ATÉ ÀS 23:59 🔥</div>
 
 <section class="produtos" id="listaProdutos">
+<h3>kit panela</h3>
   <div class="produto" data-produto="kit panela de Teflon" data-preco="190" data-categoria="cozinha" data-variacao="tamanho">
     <img src="https://i.imgur.com/nmRamsO.jpeg" alt="kit panela de Teflon">
     <h3>kit panela de Teflon</h3>
@@ -319,6 +320,7 @@
     <button onclick="abrirPopup(this)">Adicionar ao Carrinho</button>
   </div>
 
+      <h3>kit cozinha</h3>
       <div class="produto" data-produto="kit cozinha" data-preco="140" data-categoria="cozinha" data-variacao="tamanho">
     <img src="https://i.imgur.com/mi2TH4o.jpeg" alt="kit cozinha">
     <h3>kit cozinha</h3>
@@ -330,12 +332,35 @@
   <div class="produto" data-produto="tenis fila" data-preco="140" data-categoria="roupas" data-variacao="tenisfila">
   <h3>tênis fila Cinza claro com preto e detalhe vermelho</h3>
     <img src="https://i.imgur.com/5qHbWIp.jpeg" alt="tênis fila branco">
+    <p>R$ 140,00</p>
     <h3>tênis fila Cinza escuro/chumbo com preto</h3>
     <img src="https://i.imgur.com/5xB1bvG.jpeg" alt="tênis fila cinza">
-   
     <p>R$ 140,00</p>
     <button onclick="abrirPopup(this)">Adicionar ao Carrinho</button>
   </div>
+  
+  <h3>Tênis DC Skate</h3>
+  <div class="produto" data-produto="Tênis DC" data-preco="120" data-categoria="roupas" data-variacao="tenisdc">
+  <h3>Tênis DC Skate Preto e branco</h3>
+    <img src="https://i.imgur.com/uJjk9hP.jpeg" alt="Tênis DC Skate – Preto e branco">
+        <p>R$ 120,00</p>
+    <h3>tênis DC skate Preto total com detalhe cinza no logo</h3>
+    <img src="https://i.imgur.com/nR8Eio0.jpeg" alt="tênis DC skate – Preto total com detalhe cinza">
+    <p>R$ 120,00</p>
+    <button onclick="abrirPopup(this)">Adicionar ao Carrinho</button>
+  </div>
+  
+  <h3>Tênis Olympikus</h3>
+  <div class="produto" data-produto="Tênis Olympikus" data-preco="200" data-categoria="roupas" data-variacao="Olympikus">
+  <h3>Vermelho com preto e detalhes cinza</h3>
+    <img src="https://i.imgur.com/eyK1sLJ.jpeg" alt="Tênis Olympikus Vermelho com preto e detalhes cinza">
+    <p>R$ 200,00</p>
+    <h3>Azul com verde-limão e cinza</h3>
+    <img src="https://i.imgur.com/Fmd6qpw.jpeg" alt="Tênis Olympikus Azul com verde-limão e cinza ">
+    <p>R$ 200,00</p>
+    <button onclick="abrirPopup(this)">Adicionar ao Carrinho</button>
+  </div>
+  
 </section>
 
 <footer>
@@ -371,6 +396,22 @@
       <select id="tenisfila">
         <option value="Cinza claro com preto">Cinza claro com preto</option>
         <option value="Cinza escuro">Cinza escuro</option>
+      </select>
+    </div>
+    
+    <div id="divtenisdc">
+      <select id="tenisdc">
+        <option value="Preto e branco">Preto e branco</option>
+        <option value="Preto total com detalhe cinza">Preto total com detalhe cinza</option>
+        
+      </select>
+    </div>
+    
+    <div id="divOlympikus">
+      <select id="Olympikus">
+        <option value="Vermelho com preto">Vermelho com preto</option>
+        <option value="Azul com verde-limão">Azul com verde-limão</option>
+        
       </select>
     </div>
     
@@ -553,6 +594,8 @@ function abrirPopup(btn) {
   document.getElementById('divCor').style.display = (variacao === 'cor' || variacao === 'completo') ? 'block' : 'none';
   document.getElementById('divTamanho').style.display = (variacao === 'tamanho' || variacao === 'completo') ? 'block' : 'none';
   document.getElementById('divtenisfila').style.display = (variacao === 'tenisfila' || variacao === 'tenisfila') ? 'block' : 'none';
+    document.getElementById('divtenisdc').style.display = (variacao === 'tenisdc' || variacao === 'tenisdc') ? 'block' : 'none';
+    document.getElementById('divOlympikus').style.display = (variacao === 'Olympikus' || variacao === 'Olympikus') ? 'block' : 'none';
   
 
   document.getElementById('popupVariacoes').style.display = 'flex';
@@ -575,9 +618,14 @@ function confirmarAdicao() {
     variacoes.push(`Tamanho: ${tamanho}`);
   }
   
-  if (produtoSelecionado.tipoVariacao === 'tenisfila' || produtoSelecionado.tipoVariacao === 'tenisfila') {
-    const tenisfila = document.getElementById('tenisfila').value;
-    variacoes.push(`cor: ${tenisfila}`);
+  if (produtoSelecionado.tipoVariacao === 'tenisdc' || produtoSelecionado.tipoVariacao === 'tenisfila') {
+    const tenisdc = document.getElementById('tenisdc').value;
+    variacoes.push(`cor: ${tenisdc}`);
+  }
+  
+    if (produtoSelecionado.tipoVariacao === 'Olympikus' || produtoSelecionado.tipoVariacao === 'Olympikus') {
+    const Olympikus = document.getElementById('Olympikus').value;
+    variacoes.push(`cor: ${Olympikus}`);
   }
 
   carrinho.push({
